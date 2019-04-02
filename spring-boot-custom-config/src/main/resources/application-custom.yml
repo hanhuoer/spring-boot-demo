@@ -1,0 +1,6 @@
+com:
+  code:
+    custom:
+      yaml:
+        name: yaml
+        description: custom yaml
