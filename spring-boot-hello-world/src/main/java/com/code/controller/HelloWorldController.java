@@ -11,6 +11,11 @@ public class HelloWorldController {
     @Autowired
     HelloWorldService helloWorldService;
 
+    @RequestMapping("/")
+    public String index() {
+        return "index";
+    }
+
     @RequestMapping("/hello")
     public String hello() {
         return "hello world!";
