@@ -97,6 +97,19 @@ public class MyWebSocket {
         // this.session.getAsyncRemote().sendText(message);
     }
 
+    /**
+     * 群发自定义消息
+     */
+    public static void sendInfo(String message) throws IOException {
+        for (MyWebSocket item : webSocketSet) {
+            try {
+                item.sendMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
