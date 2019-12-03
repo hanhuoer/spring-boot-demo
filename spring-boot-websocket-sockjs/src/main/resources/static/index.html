@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+Welcome<br/>
+<button onclick="connect()">Connect</button>
+<button onclick="disconnect()">Close</button>
+<div style="border: 1px solid #333333; overflow: hidden">
+    <div style="float: left; width: 200px;">
+        <input id="chat-text" type="text"/>
+        <button onclick="sendWebSocket('/chat', '#chat-text')">Send</button>
+        <div id="chat" style="background-color: aliceblue; height: 50vh; overflow: auto">
+        </div>
+    </div>
+    <div style=" float: left; width: 200px; margin-left: 100px; margin-right: 100px">
+        <input id="chat-test-text" type="text"/>
+        <button onclick="sendWebSocket('/test', '#chat-test-text')">Send</button>
+        <div id="chat-test" style="background-color: antiquewhite; height: 50vh; overflow: auto;">
+        </div>
+    </div>
+    <div style=" float: left; width: 600px;">
+        <div style="height: 44px">heartbeat</div>
+        <div id="chat-heartbeat" style="background-color: cadetblue; height: 50vh; overflow: auto;">
+        </div>
+    </div>
+</div>
+</body>
+<script src="js/sockjs.js"></script>
+<script src="js/stomp.js"></script>
+<script>
+    // 这里变量名千万不要使用 stomp
+    var stompClient = null;
+    var headers = {
+        Authorization: 'test'
+    };
+
+    function connect() {
+        var socket = new SockJS('http://localhost:8080/server');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, (frame) => {
+
+            // console.log('Connected: ' + frame);
+            // 注册消息推送
+            stompClient.subscribe('/topic/chat', (data) => {
+                print('#chat', data.body)
+            });
+
+            stompClient.subscribe('/topic/test', (data) => {
+                print('#chat-test', data.body)
+            });
+
+            stompClient.subscribe('/topic/heartbeat', (data) => {
+                print('#chat-heartbeat', data.body);
+            });
+            print("#chat", "Connected.");
+            print("#chat-test", "Connected.");
+            print("#chat-heartbeat", "Connected.");
+        }, (error) => {
+            console.log('error.');
+            console.log(error);
+        });
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+        console.log("Disconnected");
+        print("#chat", "Disconnected.");
+        print("#chat-test", "Disconnected.");
+        print("#chat-heartbeat", "Disconnected.");
+    }
+
+    function sendWebSocket(destination, selector) {
+        stompClient.send(destination, {}, JSON.stringify({
+            'content': document.querySelector(selector).value,
+            'sendTime': 123
+        }))
+    }
+
+    function print(selector, data) {
+        selector = document.querySelector(selector);
+        selector.innerHTML += data + '<br/>';
+        selector.scrollTop = selector.scrollHeight;
+    }
+
+</script>
+
+</html>
