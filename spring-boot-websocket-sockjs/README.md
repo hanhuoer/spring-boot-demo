@@ -17,3 +17,5 @@ client.debug = null;
 [stompjs](https://github.com/stomp-js/stompjs)
 
 [StompJS使用文档总结](https://www.cnblogs.com/goloving/p/10746378.html)
+
+[websocket stomp配置,与session的结合以及ws/wss协议的使用](https://blog.csdn.net/u011943534/article/details/81007002)
