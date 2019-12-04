@@ -10,6 +10,10 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @Configuration
 public class WebSocketConfiguration {
 
+    /**
+     * 开启扫描 @ServerEndpoint 注解的 bean
+     * @return
+     */
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
